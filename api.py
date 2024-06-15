@@ -9,6 +9,7 @@ from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings, ChatNVIDIA
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.vectorstores import chroma
 from langchain.llms import llamacpp
+from openai import AzureOpenAI
 from langchain.callbacks.manager import CallbackManager
 from dotenv import load_dotenv
 from src.prompt import *
@@ -25,6 +26,8 @@ app = Flask(__name__)
 # Load environment variables
 load_dotenv()
 NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY')
+AZURE_ENDPOINT = os.environ.get('AZURE_ENDPOINT')
+AZURE_API_KEY = os.environ.get('AZURE_API_KEY')
 
 # Define constants
 index_name = "drs_db"
@@ -66,7 +69,10 @@ chain_type_kwargs = {"prompt": PROMPT}
 # llm=openai.OpenAI(openai_api_key=os.environ.get('OPENAI_API_KEY'), model_name="gpt-3.5-turbo", temperature=0.75, callback_manager=CallbackManager([llm_custom]), verbose=True, max_tokens=2048, context_length=2048)
 
 '''Code for NVIDIA Nim LLM'''
-llm=ChatNVIDIA(base_url = "https://integrate.api.nvidia.com/v1", nvidia_api_key=NVIDIA_API_KEY, model='meta/llama3-70b-instruct', max_tokens=1024, temperature=0.7, callback_manager=CallbackManager([llm_custom]), verbose=True, streaming=True)
+# llm=ChatNVIDIA(base_url = "https://integrate.api.nvidia.com/v1", nvidia_api_key=NVIDIA_API_KEY, model='meta/llama3-70b-instruct', max_tokens=1024, temperature=0.1, callback_manager=CallbackManager([llm_custom]), verbose=True, streaming=True)
+
+'''Azure OpenAI Code'''
+llm = AzureOpenAI(azure_endpoint=AZURE_ENDPOINT, azure_api_version="2022-12-01", deployment_name="drstestmodel", temperature=0.1, callback_manager=CallbackManager([llm_custom]), verbose=True, max_tokens=2048, context_length=2048)
 
 '''Trying to code llm-cpp code from the documentation here'''
 # from langchain.callbacks.manager import CallbackManager
