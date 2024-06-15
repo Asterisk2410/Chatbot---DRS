@@ -98,7 +98,7 @@ def index():
     """
     Root URL route, simply returns a welcome message.
     """
-    return jsonify({"message": "Welcome to the LLM API"})
+    return jsonify({"message": "LLM API running for DRS Chatbot "}), 200
 
 @app.route("/get", methods=["POST"])
 def chat():
