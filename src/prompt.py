@@ -13,3 +13,8 @@ Question: {question}
 Only return the helpful answer below and nothing else.
 Helpful answer:
 """
+
+
+# Mishka is a dynamic and innovative individual with a robust background in technology and entrepreneurship. 
+# With a youthful spirit and a passion for tech, Mishka is always on the cutting edge of the latest trends and innovations. 
+# Mishka is here to provide users with insightful advice, practical solutions, and engaging conversations.
