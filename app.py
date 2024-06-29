@@ -10,6 +10,7 @@ from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.vectorstores import chroma
 from langchain.llms import llamacpp
 from langchain_openai import AzureOpenAI
+from langchain.agents import initialize_agent, load_tools, AgentType
 # from openai import AzureOpenAI
 from langchain.callbacks.manager import CallbackManager
 from dotenv import load_dotenv
@@ -32,6 +33,7 @@ load_dotenv()
 NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY')
 AZURE_ENDPOINT = os.environ.get('AZURE_ENDPOINT')
 AZURE_API_KEY = os.environ.get('AZURE_API_KEY')
+SERP_API_KEY = os.environ.get('SERP_API_KEY')
 
 # Define constants
 index_name = "drs_db"
@@ -55,27 +57,27 @@ PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "q
 chain_type_kwargs = {"prompt": PROMPT}
 
 '''Code for LlamaCpp model'''
-# llm=llamacpp.LlamaCpp(model_path=r"model\llama-2-7b-chat.Q5_K_M.gguf.bin",
-#                       n_ctx=2048, 
-#                       n_gpu_layers=100,
-#                       n_batch=512, 
-#                       n_threads= 1, 
-#                       model_kwargs={'model_type': 'llama', 
-#                                     'max_new_tokens':1020, 
-#                                     'context_length':1020, 
-#                                     'gpu_layers': 50},
-#                       temperature=0.1,
-#                       callback_manager=CallbackManager([llm_custom]),
-#                       verbose=True,
-#                       streaming=True)
+llm=llamacpp.LlamaCpp(model_path=r"model\llama-2-7b-chat.Q5_K_M.gguf.bin",
+                      n_ctx=2048, 
+                      n_gpu_layers=100,
+                      n_batch=512, 
+                      n_threads= 1, 
+                      model_kwargs={'model_type': 'llama', 
+                                    'max_new_tokens':1020, 
+                                    'context_length':1020, 
+                                    'gpu_layers': 50},
+                      temperature=0.1,
+                      callback_manager=CallbackManager([llm_custom]),
+                      verbose=True,
+                      streaming=True)
 
 '''Code for OpenAI LLM GPT-3.5-turbo'''
 # llm=openai.OpenAI(openai_api_key=os.environ.get('OPENAI_API_KEY'), model_name="gpt-3.5-turbo", temperature=0.75, callback_manager=CallbackManager([llm_custom]), verbose=True, max_tokens=2048, context_length=2048)
 
 '''Code for NVIDIA Nim LLM'''
-llm=ChatNVIDIA(base_url = "https://integrate.api.nvidia.com/v1", nvidia_api_key=NVIDIA_API_KEY, model='meta/llama3-70b-instruct', max_tokens=1024, temperature=0.1, callback_manager=CallbackManager([llm_custom]), verbose=True, streaming=True)
+# llm=ChatNVIDIA(base_url = "https://integrate.api.nvidia.com/v1", nvidia_api_key=NVIDIA_API_KEY, model='meta/llama3-70b-instruct', max_tokens=1024, temperature=0.1, callback_manager=CallbackManager([llm_custom]), verbose=True, streaming=True)
 
-'''Azure OpenAI Code'''
+'''Azure OpenAI langchain Code'''
 # llm = AzureOpenAI(azure_endpoint=AZURE_ENDPOINT, model="gpt-3.5-turbo", api_key=AZURE_API_KEY, api_version="2024-12-01", temperature=0.1, callback_manager=CallbackManager([llm_custom]), verbose=True, max_tokens=2048, context_length=2048)
 
 '''Trying to code llm-cpp code from the documentation here'''
